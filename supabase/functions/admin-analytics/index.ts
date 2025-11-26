@@ -18,59 +18,57 @@ serve(async (req) => {
     )
 
     // Verify admin user
-    const authHeader = req.headers.get('Authorization')!
+    const authHeader = req.headers.get('Authorization')
+    if (!authHeader) {
+      return new Response(
+        JSON.stringify({ error: 'No authorization header' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
+    }
+
     const token = authHeader.replace('Bearer ', '')
-    const { data: { user } } = await supabase.auth.getUser(token)
+    const { data: { user }, error: authError } = await supabase.auth.getUser(token)
+
+    if (authError || !user) {
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
+    }
 
     const { data: adminUser } = await supabase
       .from('admin_users')
       .select('role')
-      .eq('auth_user_id', user?.id)
+      .eq('auth_user_id', user.id)
       .eq('is_active', true)
       .single()
 
     if (!adminUser) {
       return new Response(
-        JSON.stringify({ error: 'Unauthorized' }),
+        JSON.stringify({ error: 'Not an admin user' }),
         { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
 
-    // Get query parameters
-    const url = new URL(req.url)
-    const period = url.searchParams.get('period') || '30' // days
-    const periodDays = parseInt(period)
+    // Get current month start date
+    const now = new Date()
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1)
+    const monthStartStr = monthStart.toISOString()
 
-    const startDate = new Date()
-    startDate.setDate(startDate.getDate() - periodDays)
-    const startDateStr = startDate.toISOString()
-
-    // Fetch all analytics data in parallel
+    // Fetch all analytics data in parallel with error handling
     const [
       totalUsersResult,
-      newUsersResult,
-      activeSubscriptionsResult,
       trialUsersResult,
-      revenueResult,
+      activeSubscriptionsResult,
+      newSignupsResult,
+      monthlySubsResult,
+      yearlySubsResult,
+      cancelledResult,
       couponRedemptionsResult,
-      userGrowthResult,
-      subscriptionsByPlanResult,
-      recentActivityResult
+      totalSavingsResult
     ] = await Promise.all([
       // Total users
       supabase.from('profiles').select('*', { count: 'exact', head: true }),
-
-      // New users in period
-      supabase
-        .from('profiles')
-        .select('*', { count: 'exact', head: true })
-        .gte('created_at', startDateStr),
-
-      // Active subscriptions
-      supabase
-        .from('subscriptions')
-        .select('*', { count: 'exact', head: true })
-        .eq('status', 'active'),
 
       // Trial users
       supabase
@@ -78,107 +76,155 @@ serve(async (req) => {
         .select('*', { count: 'exact', head: true })
         .eq('subscription_status', 'trial'),
 
-      // Revenue in period (sum of successful payments)
-      supabase
-        .from('payment_history')
-        .select('amount')
-        .eq('status', 'captured')
-        .gte('created_at', startDateStr),
-
-      // Coupon redemptions in period
-      supabase
-        .from('coupon_redemptions')
-        .select('*', { count: 'exact', head: true })
-        .gte('redeemed_at', startDateStr),
-
-      // User growth by day (last 30 days)
-      supabase
-        .from('profiles')
-        .select('created_at')
-        .gte('created_at', startDateStr)
-        .order('created_at', { ascending: true }),
-
-      // Subscriptions by plan type
+      // Active subscriptions
       supabase
         .from('subscriptions')
-        .select('plan_type')
+        .select('*', { count: 'exact', head: true })
         .eq('status', 'active'),
 
-      // Recent activity (audit log)
+      // New signups this month
       supabase
-        .from('admin_audit_log')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .limit(10)
+        .from('profiles')
+        .select('*', { count: 'exact', head: true })
+        .gte('created_at', monthStartStr),
+
+      // Monthly subscribers
+      supabase
+        .from('subscriptions')
+        .select('*', { count: 'exact', head: true })
+        .eq('status', 'active')
+        .eq('plan_type', 'monthly'),
+
+      // Yearly subscribers
+      supabase
+        .from('subscriptions')
+        .select('*', { count: 'exact', head: true })
+        .eq('status', 'active')
+        .eq('plan_type', 'yearly'),
+
+      // Cancelled this month
+      supabase
+        .from('subscriptions')
+        .select('*', { count: 'exact', head: true })
+        .eq('status', 'cancelled')
+        .gte('updated_at', monthStartStr),
+
+      // Unique coupons used
+      supabase
+        .from('coupon_redemptions')
+        .select('coupon_id', { count: 'exact', head: true }),
+
+      // Total savings from coupons
+      supabase
+        .from('coupon_redemptions')
+        .select('savings_amount')
     ])
 
-    // Calculate revenue
-    const totalRevenue = revenueResult.data?.reduce((sum, payment) => sum + (payment.amount || 0), 0) || 0
+    // Calculate values with fallbacks
+    const totalUsers = totalUsersResult.count || 0
+    const trialUsers = trialUsersResult.count || 0
+    const activeSubscribers = activeSubscriptionsResult.count || 0
+    const newSignupsThisMonth = newSignupsResult.count || 0
+    const monthlySubscribers = monthlySubsResult.count || 0
+    const yearlySubscribers = yearlySubsResult.count || 0
+    const cancelledThisMonth = cancelledResult.count || 0
+    const totalRedemptions = couponRedemptionsResult.count || 0
 
-    // Process user growth data
-    const userGrowthByDay: Record<string, number> = {}
-    userGrowthResult.data?.forEach(user => {
-      const date = new Date(user.created_at).toISOString().split('T')[0]
-      userGrowthByDay[date] = (userGrowthByDay[date] || 0) + 1
-    })
+    // Calculate total savings
+    const totalSavings = totalSavingsResult.data?.reduce(
+      (sum, r) => sum + (r.savings_amount || 0), 0
+    ) || 0
 
-    // Process subscriptions by plan
-    const subscriptionsByPlan: Record<string, number> = {}
-    subscriptionsByPlanResult.data?.forEach(sub => {
-      const plan = sub.plan_type || 'unknown'
-      subscriptionsByPlan[plan] = (subscriptionsByPlan[plan] || 0) + 1
-    })
+    // Calculate conversion rate (active subscribers / total users)
+    const conversionRate = totalUsers > 0
+      ? parseFloat(((activeSubscribers / totalUsers) * 100).toFixed(2))
+      : 0
 
-    // Calculate conversion rate (trial to paid)
-    const conversionRate = totalUsersResult.count && activeSubscriptionsResult.count
-      ? ((activeSubscriptionsResult.count / totalUsersResult.count) * 100).toFixed(2)
-      : '0'
+    // Calculate churn rate
+    const totalWithCancelled = activeSubscribers + cancelledThisMonth
+    const churnRate = totalWithCancelled > 0
+      ? parseFloat(((cancelledThisMonth / totalWithCancelled) * 100).toFixed(2))
+      : 0
 
-    // Calculate churn (cancelled subscriptions in period)
-    const { count: churnedCount } = await supabase
+    // Calculate MRR and ARR
+    const monthlyPrice = 199 // INR
+    const yearlyPrice = 1999 // INR
+    const mrr = (monthlySubscribers * monthlyPrice) + Math.round((yearlySubscribers * yearlyPrice) / 12)
+    const arr = mrr * 12
+
+    // Get conversions this month (new active subscriptions this month)
+    const { count: conversionsThisMonth } = await supabase
       .from('subscriptions')
       .select('*', { count: 'exact', head: true })
-      .eq('status', 'cancelled')
-      .gte('updated_at', startDateStr)
+      .eq('status', 'active')
+      .gte('created_at', monthStartStr)
 
-    const churnRate = activeSubscriptionsResult.count && churnedCount
-      ? ((churnedCount / (activeSubscriptionsResult.count + churnedCount)) * 100).toFixed(2)
-      : '0'
+    // Get unique coupons count
+    const { data: uniqueCoupons } = await supabase
+      .from('coupon_redemptions')
+      .select('coupon_id')
 
+    const uniqueCouponsUsed = new Set(uniqueCoupons?.map(c => c.coupon_id) || []).size
+
+    // Return data in the format expected by the frontend
     return new Response(
       JSON.stringify({
         overview: {
-          totalUsers: totalUsersResult.count || 0,
-          newUsers: newUsersResult.count || 0,
-          activeSubscriptions: activeSubscriptionsResult.count || 0,
-          trialUsers: trialUsersResult.count || 0,
-          totalRevenue: totalRevenue,
-          couponRedemptions: couponRedemptionsResult.count || 0,
-          conversionRate: parseFloat(conversionRate),
-          churnRate: parseFloat(churnRate)
+          totalUsers,
+          trialUsers,
+          activeSubscribers,
+          newSignupsThisMonth,
+          conversionsThisMonth: conversionsThisMonth || 0
         },
-        charts: {
-          userGrowth: Object.entries(userGrowthByDay).map(([date, count]) => ({
-            date,
-            count
-          })),
-          subscriptionsByPlan: Object.entries(subscriptionsByPlan).map(([plan, count]) => ({
-            plan,
-            count
-          }))
+        revenue: {
+          mrr,
+          arr,
+          monthlySubscribers,
+          yearlySubscribers
         },
-        recentActivity: recentActivityResult.data || [],
-        period: {
-          days: periodDays,
-          startDate: startDateStr,
-          endDate: new Date().toISOString()
+        conversion: {
+          conversionRate,
+          churnRate,
+          cancelledThisMonth
+        },
+        coupons: {
+          uniqueCouponsUsed,
+          totalRedemptions,
+          totalSavings
         }
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )
   } catch (error) {
+    console.error('Analytics error:', error)
     return new Response(
-      JSON.stringify({ error: (error as Error).message }),
+      JSON.stringify({
+        error: (error as Error).message,
+        // Return default values so the UI doesn't crash
+        overview: {
+          totalUsers: 0,
+          trialUsers: 0,
+          activeSubscribers: 0,
+          newSignupsThisMonth: 0,
+          conversionsThisMonth: 0
+        },
+        revenue: {
+          mrr: 0,
+          arr: 0,
+          monthlySubscribers: 0,
+          yearlySubscribers: 0
+        },
+        conversion: {
+          conversionRate: 0,
+          churnRate: 0,
+          cancelledThisMonth: 0
+        },
+        coupons: {
+          uniqueCouponsUsed: 0,
+          totalRedemptions: 0,
+          totalSavings: 0
+        }
+      }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )
   }
