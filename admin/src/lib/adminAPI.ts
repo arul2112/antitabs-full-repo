@@ -67,6 +67,16 @@ export interface AnalyticsData {
   }
 }
 
+// Helper function to add timeout to promises
+function withTimeout<T>(promise: Promise<T>, timeoutMs: number, errorMessage: string): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<T>((_, reject) =>
+      setTimeout(() => reject(new Error(errorMessage)), timeoutMs)
+    ),
+  ])
+}
+
 // API Functions
 export const adminAPI = {
   // Verify admin session and get admin info
@@ -74,14 +84,36 @@ export const adminAPI = {
     const { data: { session } } = await supabase.auth.getSession()
     if (!session) throw new Error('Not authenticated')
 
-    const { data, error } = await supabase.functions.invoke('admin-login', {
-      headers: {
-        Authorization: `Bearer ${session.access_token}`,
-      },
-    })
+    try {
+      const { data, error } = await withTimeout(
+        supabase.functions.invoke('admin-login', {
+          headers: {
+            Authorization: `Bearer ${session.access_token}`,
+          },
+        }),
+        10000, // 10 second timeout
+        'Admin verification timed out. Please try again.'
+      )
 
-    if (error) throw error
-    return data.admin
+      if (error) throw error
+      if (!data?.admin) throw new Error('Invalid response from server')
+      return data.admin
+    } catch (err) {
+      // If Edge Function fails, try direct database query as fallback
+      if (err instanceof Error && (err.message.includes('timed out') || err.message.includes('Failed to fetch'))) {
+        console.warn('Edge function failed, trying direct query...')
+        const { data: adminData, error: dbError } = await supabase
+          .from('admin_users')
+          .select('id, email, full_name, role')
+          .eq('auth_user_id', session.user.id)
+          .eq('is_active', true)
+          .single()
+
+        if (dbError || !adminData) throw new Error('Not authorized as admin')
+        return adminData as AdminUser
+      }
+      throw err
+    }
   },
 
   // List users with pagination and filtering
