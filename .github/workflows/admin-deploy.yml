@@ -56,7 +56,7 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./admin/dist/
-          server-dir: /domains/admin.antitabs.in/public_html/
+          server-dir: /domains/antitabs.in/public_html/admin/
           dangerous-clean-slate: false
 
       - name: Deploy to Admin Staging (dev branch - same admin.antitabs.in with staging DB)
@@ -67,5 +67,5 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./admin/dist/
-          server-dir: /domains/admin.antitabs.in/public_html/
+          server-dir: /domains/antitabs.in/public_html/admin/
           dangerous-clean-slate: false

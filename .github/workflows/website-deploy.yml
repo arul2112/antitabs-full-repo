@@ -64,7 +64,7 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./website/build/
-          server-dir: /public_html/
+          server-dir: /domains/antitabs.in/public_html/
           dangerous-clean-slate: false
 
       - name: Deploy to Staging (staging.antitabs.in)
@@ -75,5 +75,5 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./website/build/
-          server-dir: /domains/staging.antitabs.in/public_html/
+          server-dir: /domains/antitabs.in/public_html/staging/
           dangerous-clean-slate: false
