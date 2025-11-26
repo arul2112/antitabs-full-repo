@@ -1,9 +1,9 @@
-# AntiTabs Supabase Configuration
+# AntiTabs Supabase Configuration (STAGING)
 # Docs: https://supabase.com/docs/guides/cli/config
 
 [project]
-id = "ezdtnsemaxvnkhivqhrw"
-name = "antitabs"
+id = "fsxdclkotvfdbckvrdnv"
+name = "antitabs-staging"
 
 [api]
 enabled = true
@@ -34,9 +34,9 @@ file_size_limit = "50MiB"
 
 [auth]
 enabled = true
-site_url = "https://antitabs.in"
+site_url = "https://staging.antitabs.in"
 additional_redirect_urls = [
-  "https://staging.antitabs.in",
+  "https://antitabs.in",
   "https://admin.antitabs.in",
   "http://localhost:3000",
   "http://localhost:3001"
