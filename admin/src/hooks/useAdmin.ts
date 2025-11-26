@@ -21,12 +21,25 @@ export function useAdmin(): UseAdminReturn {
     try {
       setIsLoading(true)
       setError(null)
+
+      // First check if there's an active session
+      const { data: { session } } = await supabase.auth.getSession()
+
+      if (!session) {
+        // No session, just show login page
+        setAdmin(null)
+        setIsLoading(false)
+        return
+      }
+
+      // Session exists, verify admin status
       const adminData = await adminAPI.verifyAdmin()
       setAdmin(adminData)
     } catch (err) {
       setAdmin(null)
       // Don't set error for unauthenticated state
       if (err instanceof Error && !err.message.includes('Not authenticated')) {
+        console.error('Admin verification error:', err)
         setError(err.message)
       }
     } finally {
@@ -45,6 +58,7 @@ export function useAdmin(): UseAdminReturn {
           await verifyAndSetAdmin()
         } else if (event === 'SIGNED_OUT') {
           setAdmin(null)
+          setIsLoading(false)
         }
       }
     )
