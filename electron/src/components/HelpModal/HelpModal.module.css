@@ -1,0 +1,213 @@
+/* Help Modal Styles */
+
+.helpModalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10002;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.helpModal {
+  background: rgba(30, 30, 30, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  width: 90%;
+  max-width: 700px;
+  max-height: 80vh;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  animation: slideIn 0.3s ease;
+}
+
+:global(.light-mode) .helpModal {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.helpModalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+:global(.light-mode) .helpModalHeader {
+  border-bottom-color: rgba(0, 0, 0, 0.1);
+}
+
+.helpModalTitle {
+  font-size: 20px;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
+}
+
+:global(.light-mode) .helpModalTitle {
+  color: #1a202c;
+}
+
+.helpModalClose {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  color: #999;
+  font-size: 24px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.helpModalClose:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+:global(.light-mode) .helpModalClose:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: #1a202c;
+}
+
+.helpModalContent {
+  padding: 24px;
+  overflow-y: auto;
+  max-height: calc(80vh - 140px);
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+@media (max-width: 600px) {
+  .helpModalContent {
+    grid-template-columns: 1fr;
+  }
+}
+
+.helpSection {
+  margin-bottom: 8px;
+}
+
+.helpSectionTitle {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #667eea;
+  margin: 0 0 12px 0;
+}
+
+.helpShortcutsList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.helpShortcutItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.helpShortcutKey {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+  white-space: nowrap;
+  min-width: 80px;
+  text-align: center;
+}
+
+:global(.light-mode) .helpShortcutKey {
+  background: rgba(0, 0, 0, 0.06);
+  border-color: rgba(0, 0, 0, 0.1);
+  color: #1a202c;
+}
+
+.helpShortcutDots {
+  flex: 1;
+  border-bottom: 1px dotted rgba(255, 255, 255, 0.2);
+  min-width: 20px;
+}
+
+:global(.light-mode) .helpShortcutDots {
+  border-bottom-color: rgba(0, 0, 0, 0.15);
+}
+
+.helpShortcutDescription {
+  font-size: 13px;
+  color: #ccc;
+  white-space: nowrap;
+}
+
+:global(.light-mode) .helpShortcutDescription {
+  color: #4a5568;
+}
+
+.helpModalFooter {
+  padding: 16px 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: center;
+}
+
+:global(.light-mode) .helpModalFooter {
+  border-top-color: rgba(0, 0, 0, 0.1);
+}
+
+.helpDemoButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.helpDemoButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.helpDemoButton:active {
+  transform: translateY(0);
+}

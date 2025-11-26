@@ -1,0 +1,141 @@
+.tabBar {
+  height: 36px;
+  background: #252525;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.tabs {
+  display: flex;
+  flex: 1;
+  gap: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: #1e1e1e;
+  border-radius: 6px;
+  cursor: pointer;
+  min-width: 100px;
+  max-width: 200px;
+  transition: background 0.2s;
+}
+
+.tab:hover {
+  background: #333;
+}
+
+.tab.active {
+  background: #3d3d3d;
+}
+
+.favicon {
+  width: 16px;
+  height: 16px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.tabTitle {
+  flex: 1;
+  font-size: 12px;
+  color: #ccc;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tab.active .tabTitle {
+  color: #fff;
+}
+
+.closeTab {
+  width: 18px;
+  height: 18px;
+  background: transparent;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  opacity: 0;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.tab:hover .closeTab {
+  opacity: 1;
+}
+
+.closeTab:hover {
+  background: rgba(255, 95, 86, 0.2);
+  color: #ff5f56;
+}
+
+.newTabBtn {
+  width: 28px;
+  height: 28px;
+  background: transparent;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+
+.newTabBtn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+/* Light mode */
+:global(body.light-mode) .tabBar {
+  background: #e0e0e0;
+}
+
+:global(body.light-mode) .tab {
+  background: #f5f5f5;
+}
+
+:global(body.light-mode) .tab:hover {
+  background: #eee;
+}
+
+:global(body.light-mode) .tab.active {
+  background: #fff;
+}
+
+:global(body.light-mode) .tabTitle {
+  color: #666;
+}
+
+:global(body.light-mode) .tab.active .tabTitle {
+  color: #333;
+}
+
+:global(body.light-mode) .newTabBtn {
+  color: #666;
+}
+
+:global(body.light-mode) .newTabBtn:hover {
+  background: rgba(0, 0, 0, 0.1);
+  color: #333;
+}

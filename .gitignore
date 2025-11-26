@@ -1,0 +1,85 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build outputs
+dist/
+build/
+dist-electron/
+release/
+*.dmg
+*.exe
+*.AppImage
+*.deb
+*.rpm
+*.snap
+
+# Environment variables - NEVER COMMIT THESE
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.staging
+.env.production
+
+# IDE and Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*.sublime-workspace
+*.sublime-project
+
+# OS Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Testing
+coverage/
+.nyc_output/
+
+# Electron builder cache
+.cache/
+
+# Supabase local development
+.supabase/
+supabase/.temp/
+
+# Backup folders (created during development)
+backup_*/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Optional npm cache
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Temporary files
+*.tmp
+*.temp
+.tmp/
+.temp/
+
+# Large video files (use external hosting)
+*.mov
+*.mp4
+*.avi
+*.mkv

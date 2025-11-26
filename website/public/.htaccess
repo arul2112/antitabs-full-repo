@@ -1,0 +1,23 @@
+# Enable CORS for Supabase API calls
+<IfModule mod_headers.c>
+    Header set Access-Control-Allow-Origin "*"
+    Header set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+    Header set Access-Control-Allow-Headers "X-Requested-With, Content-Type, Authorization"
+</IfModule>
+
+# Redirect all requests to index.html for React Router
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+    RewriteRule ^index\.html$ - [L]
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule . /index.html [L]
+</IfModule>
+
+# Security headers
+<IfModule mod_headers.c>
+    Header set X-Frame-Options "DENY"
+    Header set X-Content-Type-Options "nosniff"
+    Header set Referrer-Policy "no-referrer-when-downgrade"
+</IfModule>

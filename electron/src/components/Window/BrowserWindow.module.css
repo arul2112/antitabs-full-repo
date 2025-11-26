@@ -1,0 +1,194 @@
+.browserWindow {
+  position: absolute;
+  background: #1e1e1e;
+  border-radius: 10px;
+  box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  min-width: 400px;
+  min-height: 300px;
+  transition: box-shadow 0.2s;
+  overflow: hidden;
+}
+
+.browserWindow.active {
+  box-shadow: 0 15px 60px rgba(0, 102, 204, 0.3);
+}
+
+.browserWindow.selected {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
+.browserWindow.maximized {
+  border-radius: 0 !important;
+}
+
+.browserWindow.fullscreen {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  border-radius: 0 !important;
+  z-index: 100000 !important;
+}
+
+.browserWindow.dragging {
+  opacity: 0.9;
+  cursor: move;
+}
+
+/* Title Bar */
+.titleBar {
+  height: 40px;
+  background: #2d2d2d;
+  border-radius: 10px 10px 0 0;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  cursor: grab;
+  flex-shrink: 0;
+}
+
+.titleBar:active {
+  cursor: grabbing;
+}
+
+.trafficLights {
+  display: flex;
+  gap: 8px;
+  margin-right: 12px;
+}
+
+.trafficLight {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.trafficLight.close {
+  background: #ff5f56;
+}
+
+.trafficLight.minimize {
+  background: #ffbd2e;
+}
+
+.trafficLight.maximize {
+  background: #27c93f;
+}
+
+.trafficLight:hover {
+  filter: brightness(1.2);
+}
+
+.windowTitle {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 500;
+  color: #999;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center;
+}
+
+/* Content Area */
+.contentArea {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  background: #fff;
+}
+
+/* Resize Handles */
+.resizeHandle {
+  position: absolute;
+  z-index: 10;
+}
+
+.resizeHandle.n {
+  top: 0;
+  left: 10px;
+  right: 10px;
+  height: 5px;
+  cursor: n-resize;
+}
+
+.resizeHandle.s {
+  bottom: 0;
+  left: 10px;
+  right: 10px;
+  height: 5px;
+  cursor: s-resize;
+}
+
+.resizeHandle.e {
+  right: 0;
+  top: 10px;
+  bottom: 10px;
+  width: 5px;
+  cursor: e-resize;
+}
+
+.resizeHandle.w {
+  left: 0;
+  top: 10px;
+  bottom: 10px;
+  width: 5px;
+  cursor: w-resize;
+}
+
+.resizeHandle.ne {
+  top: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  cursor: ne-resize;
+}
+
+.resizeHandle.nw {
+  top: 0;
+  left: 0;
+  width: 10px;
+  height: 10px;
+  cursor: nw-resize;
+}
+
+.resizeHandle.se {
+  bottom: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  cursor: se-resize;
+}
+
+.resizeHandle.sw {
+  bottom: 0;
+  left: 0;
+  width: 10px;
+  height: 10px;
+  cursor: sw-resize;
+}
+
+/* Light mode */
+:global(body.light-mode) .browserWindow {
+  background: #fff;
+  box-shadow: 0 10px 50px rgba(0, 0, 0, 0.15);
+}
+
+:global(body.light-mode) .browserWindow.active {
+  box-shadow: 0 15px 60px rgba(0, 102, 204, 0.25);
+}
+
+:global(body.light-mode) .titleBar {
+  background: #e8e8e8;
+}
+
+:global(body.light-mode) .windowTitle {
+  color: #666;
+}

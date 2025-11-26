@@ -1,0 +1,33 @@
+.openButton {
+  position: fixed;
+  top: 44px;
+  left: 12px;
+  width: 32px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.05);
+  border: none;
+  border-radius: 6px;
+  color: #999;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  z-index: 9998;
+}
+
+.openButton:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+/* Light mode */
+:global(body.light-mode) .openButton {
+  background: rgba(0, 0, 0, 0.05);
+  color: #666;
+}
+
+:global(body.light-mode) .openButton:hover {
+  background: rgba(0, 0, 0, 0.1);
+  color: #333;
+}

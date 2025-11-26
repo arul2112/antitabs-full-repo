@@ -1,0 +1,302 @@
+/* Project Dashboard Styles */
+
+.projectDashboard {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, #f0f0f0 0%, #ffffff 100%);
+  z-index: 10000;
+  overflow-y: auto;
+}
+
+:global(.dark-mode) .projectDashboard {
+  background: linear-gradient(135deg, #0d0d0d 0%, #1a1a1a 100%);
+}
+
+.dashboardContainer {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 60px 40px;
+}
+
+.dashboardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.dashboardTitle {
+  font-size: 36px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #000 0%, #666 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+}
+
+:global(.dark-mode) .dashboardTitle {
+  background: linear-gradient(135deg, #fff 0%, #999 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.primaryButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: var(--accent-color, #667eea);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.primaryButton:hover {
+  background: #5a67d8;
+  transform: translateY(-1px);
+}
+
+.primaryButton:active {
+  transform: translateY(0);
+}
+
+.projectsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.projectCard {
+  background: rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  padding: 20px;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+:global(.dark-mode) .projectCard {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.projectCard:hover {
+  background: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+:global(.dark-mode) .projectCard:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.projectThumbnail {
+  width: 100%;
+  height: 160px;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+:global(.dark-mode) .projectThumbnail {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.projectIcon {
+  color: rgba(0, 0, 0, 0.3);
+}
+
+:global(.dark-mode) .projectIcon {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.projectInfo {
+  margin-bottom: 0;
+}
+
+.projectHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.projectName {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: #000;
+}
+
+:global(.dark-mode) .projectName {
+  color: #fff;
+}
+
+.projectMeta {
+  font-size: 13px;
+  color: #666;
+  margin: 0;
+}
+
+:global(.dark-mode) .projectMeta {
+  color: #999;
+}
+
+/* Menu button in project card */
+.menuBtn {
+  width: 28px;
+  height: 28px;
+  background: transparent;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  opacity: 0;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.projectCard:hover .menuBtn {
+  opacity: 1;
+}
+
+.menuBtn:hover {
+  background: rgba(0, 0, 0, 0.1);
+  color: #333;
+}
+
+:global(.dark-mode) .menuBtn {
+  color: #999;
+}
+
+:global(.dark-mode) .menuBtn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+/* Project context menu */
+.projectMenu {
+  position: fixed;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(20px);
+  border-radius: 8px;
+  padding: 4px;
+  min-width: 160px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  z-index: 100002;
+  animation: menuFadeIn 0.15s ease;
+}
+
+@keyframes menuFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+:global(.dark-mode) .projectMenu {
+  background: rgba(30, 30, 30, 0.98);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.projectMenuItem {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 13px;
+  color: #333;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-align: left;
+}
+
+:global(.dark-mode) .projectMenuItem {
+  color: #ccc;
+}
+
+.projectMenuItem:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: #000;
+}
+
+:global(.dark-mode) .projectMenuItem:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.projectMenuItem.danger {
+  color: #ff3b30;
+}
+
+.projectMenuItem.danger:hover {
+  background: rgba(255, 59, 48, 0.1);
+  color: #ff3b30;
+}
+
+.menuSeparator {
+  height: 1px;
+  background: rgba(0, 0, 0, 0.1);
+  margin: 4px 0;
+}
+
+:global(.dark-mode) .menuSeparator {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.emptyState {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 80px 20px;
+  color: #666;
+}
+
+:global(.dark-mode) .emptyState {
+  color: #999;
+}
+
+.emptyState svg {
+  margin-bottom: 24px;
+  opacity: 0.3;
+}
+
+.emptyState h3 {
+  font-size: 24px;
+  margin: 0 0 12px 0;
+  color: #666;
+}
+
+:global(.dark-mode) .emptyState h3 {
+  color: #999;
+}
+
+.emptyState p {
+  font-size: 16px;
+  margin: 0;
+}

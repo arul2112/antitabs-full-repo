@@ -1,0 +1,75 @@
+appId: com.antitabs.app
+productName: AntiTabs
+copyright: Copyright © 2024 AntiTabs
+
+compression: maximum
+asar: true
+removePackageScripts: true
+
+directories:
+  output: release
+  buildResources: build
+
+files:
+  - dist/**/*
+  - dist-electron/**/*
+  - "!node_modules/**/*"
+  - "!src/**/*"
+  - "!electron/**/*"
+
+extraResources:
+  - from: build/
+    to: build/
+    filter:
+      - "**/*"
+
+mac:
+  target:
+    - target: dmg
+      arch:
+        - universal
+  category: public.app-category.productivity
+  icon: build/icon.icns
+  hardenedRuntime: true
+  gatekeeperAssess: false
+  entitlements: build/entitlements.mac.plist
+  entitlementsInherit: build/entitlements.mac.plist
+
+dmg:
+  contents:
+    - x: 130
+      y: 220
+    - x: 410
+      y: 220
+      type: link
+      path: /Applications
+  window:
+    width: 540
+    height: 380
+
+win:
+  target:
+    - target: nsis
+      arch:
+        - x64
+  icon: build/icon.ico
+
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: AntiTabs
+
+linux:
+  target:
+    - target: AppImage
+      arch:
+        - x64
+  category: Utility
+  icon: build/icon.png
+
+publish:
+  provider: github
+  releaseType: release

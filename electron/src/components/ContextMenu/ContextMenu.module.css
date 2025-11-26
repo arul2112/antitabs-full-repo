@@ -1,0 +1,66 @@
+/* Context Menu Styles */
+
+.contextMenu {
+  position: fixed;
+  background: rgba(30, 30, 30, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 8px;
+  padding: 4px;
+  min-width: 180px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 10000;
+  animation: fadeIn 0.15s ease;
+}
+
+:global(.light-mode) .contextMenu {
+  background: rgba(250, 250, 250, 0.95);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.contextMenuItem {
+  padding: 8px 12px;
+  font-size: 13px;
+  color: #ccc;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+:global(.light-mode) .contextMenuItem {
+  color: #333;
+}
+
+.contextMenuItem:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+:global(.light-mode) .contextMenuItem:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: #000;
+}
+
+.contextMenuSeparator {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 4px 0;
+}
+
+:global(.light-mode) .contextMenuSeparator {
+  background: rgba(0, 0, 0, 0.1);
+}

@@ -1,0 +1,88 @@
+.navigationBar {
+  height: 44px;
+  background: #1e1e1e;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.navButtons {
+  display: flex;
+  gap: 4px;
+}
+
+.navBtn {
+  width: 28px;
+  height: 28px;
+  background: transparent;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.navBtn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.navBtn:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.urlBar {
+  flex: 1;
+  height: 28px;
+  background: #333;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  padding: 0 12px;
+  font-size: 13px;
+  color: #fff;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.urlBar:focus {
+  border-color: var(--accent-color);
+  background: #2a2a2a;
+}
+
+.urlBar::placeholder {
+  color: #666;
+}
+
+/* Light mode */
+:global(body.light-mode) .navigationBar {
+  background: #f5f5f5;
+}
+
+:global(body.light-mode) .navBtn {
+  color: #666;
+}
+
+:global(body.light-mode) .navBtn:hover:not(:disabled) {
+  background: rgba(0, 0, 0, 0.1);
+  color: #333;
+}
+
+:global(body.light-mode) .urlBar {
+  background: #fff;
+  border-color: #ddd;
+  color: #333;
+}
+
+:global(body.light-mode) .urlBar:focus {
+  border-color: var(--accent-color);
+}
+
+:global(body.light-mode) .urlBar::placeholder {
+  color: #999;
+}
