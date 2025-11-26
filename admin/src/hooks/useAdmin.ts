@@ -51,6 +51,11 @@ export function useAdmin(): UseAdminReturn {
     // Check initial auth state
     verifyAndSetAdmin()
 
+    // Safety timeout - ensure loading stops after 12 seconds max
+    const safetyTimeout = setTimeout(() => {
+      setIsLoading(false)
+    }, 12000)
+
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event) => {
@@ -64,6 +69,7 @@ export function useAdmin(): UseAdminReturn {
     )
 
     return () => {
+      clearTimeout(safetyTimeout)
       subscription.unsubscribe()
     }
   }, [verifyAndSetAdmin])

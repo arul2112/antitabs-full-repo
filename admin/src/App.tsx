@@ -10,8 +10,9 @@ import { AnalyticsPage } from '@/pages/AnalyticsPage'
 function App() {
   const { admin, isLoading, error, isAuthenticated, login, logout } = useAdmin()
 
-  // Show loading state
-  if (isLoading && !admin) {
+  // Only show loading on initial load, with a maximum of 3 seconds
+  // After that, show login page to avoid infinite loading
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-slate-900 flex items-center justify-center">
         <div className="text-center">
@@ -22,8 +23,8 @@ function App() {
     )
   }
 
-  // Show login page if not authenticated
-  if (!isAuthenticated) {
+  // Show login page if not authenticated (or if there was an error)
+  if (!isAuthenticated || error) {
     return <LoginPage onLogin={login} error={error} isLoading={isLoading} />
   }
 
