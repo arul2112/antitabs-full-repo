@@ -53,19 +53,19 @@ jobs:
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME_ADMIN }}
-          password: ${{ secrets.FTP_PASSWORD_ADMIN }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./admin/dist/
-          server-dir: /public_html/
+          server-dir: /domains/admin.antitabs.in/public_html/
           dangerous-clean-slate: false
 
-      - name: Deploy to Admin Staging (admin-staging.antitabs.in)
+      - name: Deploy to Admin Staging (dev branch - same admin.antitabs.in with staging DB)
         if: github.ref == 'refs/heads/dev'
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME_ADMIN_STAGING }}
-          password: ${{ secrets.FTP_PASSWORD_ADMIN_STAGING }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./admin/dist/
-          server-dir: /public_html/
+          server-dir: /domains/admin.antitabs.in/public_html/
           dangerous-clean-slate: false
